@@ -1,4 +1,4 @@
-package scg.example.comment;
+package dev.scg.example.comment;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

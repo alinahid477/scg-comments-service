@@ -1,4 +1,4 @@
-package scg.example.comment;
+package dev.scg.example.comment;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,5 +1,21 @@
-package scg.example.comment;
+package dev.scg.example.comment;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -9,15 +25,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentController.class)
 @AutoConfigureMockMvc
@@ -102,18 +109,15 @@ class CommentControllerTest {
     void shouldCreateNewCommentWhenGivenValidComment() throws Exception {
         var comment = new Comment(3,1,"Test", "test@gmail.com","Great Post!",null);
         when(repository.save(comment)).thenReturn(comment);
-
-        var json = STR."""
-                {
-                    "id": \{comment.id()},
-                    "postId": \{comment.postId()},
-                    "name": "\{comment.name()}",
-                    "email": "\{comment.email()}",
-                    "body": "\{comment.body()}",
-                    "version": \{comment.version()}
-                }
-                """;
-
+        JSONObject obj = new JSONObject();
+        obj.put("id", comment.id());
+        obj.put("postId", comment.postId());
+        obj.put("name", comment.name());
+        obj.put("email", comment.email());
+        obj.put("body", comment.body());
+        obj.put("version", comment.version());
+        String json = obj.toString();
+        
         mockMvc.perform(post("/api/comments")
                             .contentType("application/json")
                             .content(json))
@@ -126,17 +130,15 @@ class CommentControllerTest {
         Comment updated = new Comment(1,1,"John Doe","johndoe@example.com","This is my updated comment",1);
         when(repository.findById(1)).thenReturn(Optional.of(comments.get(0)));
         when(repository.save(updated)).thenReturn(updated);
-        String requestBody = STR."""
-            {
-                "id":\{updated.id()},
-                "postId":\{updated.postId()},
-                "name":"\{updated.name()}",
-                "email":"\{updated.email()}",
-                "body":"\{updated.body()}",
-                "version": \{updated.version()}
-            }
-            """;
-
+        JSONObject obj = new JSONObject();
+        obj.put("id", updated.id());
+        obj.put("postId", updated.postId());
+        obj.put("name", updated.name());
+        obj.put("email", updated.email());
+        obj.put("body", updated.body());
+        obj.put("version", updated.version());
+        String requestBody = obj.toString();
+        
         mockMvc.perform(put("/api/comments/1")
                         .contentType("application/json")
                         .content(requestBody))
@@ -147,17 +149,15 @@ class CommentControllerTest {
     void shouldNotUpdateAndThrowNotFoundWhenGivenAnInvalidCommentID() throws Exception {
         Comment updated = new Comment(1,1,"","john","",1);
         when(repository.save(updated)).thenReturn(updated);
-        String json = STR."""
-            {
-                "id":\{updated.id()},
-                "postId":\{updated.postId()},
-                "name":"\{updated.name()}",
-                "email":"\{updated.email()}",
-                "body":"\{updated.body()}",
-                "version": \{updated.version()}
-            }
-            """;
-
+        JSONObject obj = new JSONObject();
+        obj.put("id", updated.id());
+        obj.put("postId", updated.postId());
+        obj.put("name", updated.name());
+        obj.put("email", updated.email());
+        obj.put("body", updated.body());
+        obj.put("version", updated.version());
+        String json = obj.toString();
+        
         mockMvc.perform(put("/api/comments/1")
                         .contentType("application/json")
                         .content(json))

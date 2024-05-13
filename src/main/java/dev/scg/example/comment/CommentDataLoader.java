@@ -1,4 +1,4 @@
-package scg.example.comment;
+package dev.scg.example.comment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
