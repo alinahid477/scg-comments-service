@@ -7,7 +7,7 @@ spring:
 
 eureka:
   instance:
-    hostName: ${spring.application.name}.scg
+    hostName: ${spring.application.name}
   client:
     registerWithEureka: true
     serviceUrl: 
